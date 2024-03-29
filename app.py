@@ -1,4 +1,6 @@
 from flask import Flask, request
+import util
+import whatsappservice
 
 app = Flask(__name__)
 @app.route('/welcome', methods=['GET'])
@@ -30,11 +32,17 @@ def ReceivedMessage() :
         message = (value["messages"])[0]
         number = message[ "from"]
 
+        text = util.GetTextUser(message)
+        GenerateMessage (text, number)
+        print (text)
         return "EVENT_RECEIVED"
     except :
         return "EVENT RECEIVED"
     
-    
+def GenerateMessage(text, number) :
+    text = "EI usuario dijo: " + text
+    enviado = whatsappservice.SendMessageWhatsapp(text, number)
+    print("===> "+enviado)
 
 if(__name__== "__main__"):
    app.run()
